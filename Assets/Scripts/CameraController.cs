@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
         if (player == null) return; 
 
         //線形補完を使って、カメラを目的の場所に動かす
-        //Lerpメソッドで今の位置、ゴールとすべき位置、割合
+        //Lerpメソッド：引数 = (現在地、向かう位置、進捗）
         transform.position = Vector3.Lerp(transform.position, player.transform.position - diff, followSpeed * Time.deltaTime);
     }
 }
