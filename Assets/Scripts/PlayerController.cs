@@ -32,12 +32,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //GameStatusがplayingの時のみ動かせる
         if (GameManager.gameState == GameState.playing)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)) MoveToLeft();
             if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) MoveToRight();
             if (Input.GetKeyDown(KeyCode.Space)) Jump();
         }
+        //Stun中（フリーズ中）またはLifeがゼロなら動きを止める
         if(IsStun())
         {
             moveDirection.x = 0;
@@ -51,6 +53,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             //徐々に加速しZ方向に常に前進させる
+            //moveDirection.z : 直前までのスピード
+            //accelerationZ：加速度
             float acceleratedZ = moveDirection.z + (accelerationZ * Time.deltaTime);
             moveDirection.z = Mathf.Clamp(accelerationZ, 0, speedZ);
 
@@ -63,12 +67,16 @@ public class PlayerController : MonoBehaviour
         moveDirection.y -= gravity * Time.deltaTime;
 
         //移動実効
+        //Playerが向いている方向（斜め前など）はPlayerから見たz=-1（例）、一方でGloabal座標は異なる
+        //よって、TransformDirectionメソッドで、Playerが見ている座標をGloabal座標へ変換する
         Vector3 globalDirection = transform.TransformDirection(moveDirection);
         controller.Move(globalDirection * Time.deltaTime);
 
         //移動後接地してたらY方向の速度はリセットする
+        //2Dでは、地面接地判定のためにCircleCastメソッドを使ってGround Layerを持っているObjectで地面判定をしていた
+        //3Dでは、CharacterControllerコンポーネントがぶつかり判定を自動チェックする機能を持っている(isGrounded)
+          //但し、Layer別の接地判定はできない
         if (controller.isGrounded) moveDirection.y = 0;   
-
     }
 
     public void MoveToLeft()
@@ -98,7 +106,7 @@ public class PlayerController : MonoBehaviour
     {
         //recoverTimeが作動中かLifeが0になった場合はStunフラグがON
         bool stun = recoverTime > 0.0f || life <= 0;
-        //StunフラグがＯＦＦの場合はボディを確実に表示
+        //StunフラグがOFFの場合はPlayerのbodyを確実に表示
         if (!stun) body.SetActive(true);
         //Stunフラグをリターン
         return stun; 
