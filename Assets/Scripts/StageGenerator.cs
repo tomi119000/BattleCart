@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -56,13 +56,13 @@ public class StageGenerator : MonoBehaviour
         currentChipIndex = toChipIndex; 
     }
 
-    GameObject GeneratesStage(int chipIndex)
+    GameObject GeneratesStage(int toChipIndex)
     {
         int nextStageChip = Random.Range(0, stageChips.Length);
 
         GameObject stageObject = Instantiate(
             stageChips[nextStageChip],
-            new Vector3(0, 0, chipIndex * StageChipSize),
+            new Vector3(0, 0, toChipIndex * StageChipSize),
             Quaternion.identity
             );
 

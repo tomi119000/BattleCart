@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6337307374115802254}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Gate
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
@@ -140,8 +140,8 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.8
+  m_Height: 2.04
+  m_Radius: 0.82
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -159,6 +159,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445cd72e6a8337147938bc03b8feaa68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  life: 10
+  gravity: 9.81
+  speedZ: 10
+  accelerationZ: 8
+  speedX: 10
+  speedJump: 10
+  body: {fileID: 2567677346424811061}
+  boms: {fileID: 0}
 --- !u!1001 &2159545002140784365
 PrefabInstance:
   m_ObjectHideFlags: 0
