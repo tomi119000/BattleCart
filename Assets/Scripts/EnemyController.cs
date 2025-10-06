@@ -24,9 +24,9 @@ public class EnemyController : MonoBehaviour
             Destroy(gameObject);
             return; 
         }
-
+        //徐々に加速しZ方向に常に前進させる
         float acceleratedZ = moveDirection.z * (accelerationZ *Time.deltaTime);
-        moveDirection.z = Mathf.Clamp(acceleratedZ, speedZ, 0);
+        moveDirection.z = Mathf.Clamp(acceleratedZ, speedZ, 0); //acceleratedZの速さ, min:speedZ, max:0
 
         if(useGravity)
         {
@@ -37,6 +37,7 @@ public class EnemyController : MonoBehaviour
             moveDirection.y = 0;
         }
 
+        //移動実行
         Vector3 globalDirection = transform.TransformDirection(moveDirection);
         controller.Move(globalDirection * Time.deltaTime);
 
