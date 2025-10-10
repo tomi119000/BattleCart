@@ -1,4 +1,4 @@
-﻿using Unity.VisualScripting;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -23,9 +23,15 @@ public class PlayerController : MonoBehaviour
     public GameObject body;
     public GameObject boms;
 
+    AudioSource audio;
+    public AudioClip se_shot;
+    public AudioClip se_damage;
+    public AudioClip se_jump; 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        audio = GetComponent<AudioSource>();
         controller = GetComponent<CharacterController>(); 
     }
 
@@ -76,7 +82,10 @@ public class PlayerController : MonoBehaviour
         //2Dでは、地面接地判定のためにCircleCastメソッドを使ってGround Layerを持っているObjectで地面判定をしていた
         //3Dでは、CharacterControllerコンポーネントがぶつかり判定を自動チェックする機能を持っている(isGrounded)
           //但し、Layer別の接地判定はできない
-        if (controller.isGrounded) moveDirection.y = 0;   
+        if (controller.isGrounded) moveDirection.y = 0;
+
+        //1秒に１ずつトップスピードの上限値が増えていく
+        speedZ +=  Time.deltaTime; 
     }
 
     public void MoveToLeft()
@@ -93,7 +102,11 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         if (IsStun()) return;
-        if (controller.isGrounded) moveDirection.y = speedJump;
+        if (controller.isGrounded)
+        {
+            SEPlay(SEType.Jump); //ジャンプ音を鳴らす
+            moveDirection.y = speedJump;
+        }
     }
     
     public int Life()
@@ -122,8 +135,19 @@ public class PlayerController : MonoBehaviour
             //体力をマイナス
             life--;
 
+            SEPlay(SEType.Damage); //ジャンプ音を鳴らす
+
+            //スピードをリセット
+            speedZ = 10; 
+
             if(life <=0)
             {
+                SoundManager.StopBgm()
+
+                //ゲームオーバーになったとき（life<=0)、PCに"Score"というキーワードで保存
+                //PlayerPrefs.SetFloat or SetString, or SetInt
+                PlayerPrefs.SetFloat("Score", transform.position.z); 
+                
                 GameManager.gameState = GameState.gameover;
                 //爆発エフェクトの発生
                 Instantiate(boms, transform.position, Quaternion.identity);
@@ -143,5 +167,22 @@ public class PlayerController : MonoBehaviour
         //正の周期なら表示、負の周期なら非表示
         if (val > 0) body.SetActive(true);
         else body.SetActive(false); 
+    }
+
+    //SE再生
+    public void SEPlay(SEType type)
+    {
+        switch (type)
+        {
+            case SEType.Shot:
+                audio.PlayOneShot(se_shot);
+                break;
+            case SEType.Damage:
+                audio.PlayOneShot(se_damage);
+                break;
+            case SEType.Jump:
+                audio.PlayOneShot(se_jump);
+                break;
+        }
     }
 }
