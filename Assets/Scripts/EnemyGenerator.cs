@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyGenarator : MonoBehaviour
+public class EnemyGenerator : MonoBehaviour
 {
     const float Lanewidth = 6.0f; //レーン幅
     public GameObject[] dangerPrefab; //生成される危険車のプレハブ
@@ -19,13 +19,13 @@ public class EnemyGenarator : MonoBehaviour
     Vector3 diff;
     public float followSpeed = 8; //ジェネレーターの補完スピード
 
-    int isSky; 
+    int isSky;
     void Start()
     {
         transform.position = defaultPos; //ジェネレーターの初期値
         cam = Camera.main.gameObject; //カメラのゲームオブジェクト情報
         //初期時点でのカメラとジェネレータの位置の差
-        diff = transform.position - cam.transform.position; 
+        diff = transform.position - cam.transform.position;
     }
 
     // Update is called once per frame
@@ -35,13 +35,13 @@ public class EnemyGenarator : MonoBehaviour
 
         timer -= Time.deltaTime; //カウントダウン
 
-        if (timer <=0) //タイマーがゼロになったら
+        if (timer <= 0) //タイマーがゼロになったら
         {
             DangerCreated(); //危険車の生成
             maxIntervalTime -= 0.1f;
             //Mathf.ClampでmaxIntervalTimeの範囲を0.1f～3.0f
             maxIntervalTime = Mathf.Clamp(maxIntervalTime, 0.1f, 3.0f);
-            timer = Random.Range(minIntervalTime, maxIntervalTime+1);
+            timer = Random.Range(minIntervalTime, maxIntervalTime + 1);
 
         }
     }
@@ -50,7 +50,7 @@ public class EnemyGenarator : MonoBehaviour
     {
         //線形補完を使って、カメラを目的の場所に動かす
         //Lerpメソッドで（今の位置、ゴール位置、割合）
-        transform.position = Vector3.Lerp(transform.position,cam.transform.position, followSpeed*Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, cam.transform.position, followSpeed * Time.deltaTime);
     }
 
     //危険車の生成メソッド
@@ -66,9 +66,10 @@ public class EnemyGenarator : MonoBehaviour
 
         //dangerPrefab(GameObject)をvの位置に、Player向きで生成する）
         Instantiate(
-            dangerPrefab[isSky], 
-            v, 
+            dangerPrefab[isSky],
+            v,
             dangerPrefab[isSky].transform.rotation //rotation y = 180（Player向き）
             );
     }
 }
+
